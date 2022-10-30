@@ -1,0 +1,33 @@
+image: markhobson/maven-chrome
+
+stages:
+   - build
+   - test
+   
+   
+variables:
+   MAVEN_OPTS: "-Dmaven.repo.local=.m2/repository"
+   
+
+cache:
+   paths:
+      - .m2/repository/
+      - target/
+      
+
+build:
+   stage: build
+   script:
+      - mvn clean compile
+      - echo "build complete"
+      
+      
+test:
+   stage: test
+   needs: ["build"] 
+   script: 
+      - mvn verify
+   artifacts:
+     reports:
+       junit:
+          - target/cucumber/*.xml
